@@ -17,7 +17,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.samples.petclinic.model.Person;
 
-public class FakeOwner extends Person implements Owner {
+public class FakeOwner extends Person implements OwnerInterface {
 	 
 	private String address;
 	private String city;
