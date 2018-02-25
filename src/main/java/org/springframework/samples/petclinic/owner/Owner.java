@@ -32,6 +32,8 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.model.Person;
 
 /**
@@ -59,7 +61,7 @@ public class Owner extends Person {
     private String telephone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-    private Set<Pet> pets;
+    private Set<PetInterface> pets;
 
     public String getAddress() {
         return this.address;
@@ -85,27 +87,27 @@ public class Owner extends Person {
         this.telephone = telephone;
     }
 
-    protected Set<Pet> getPetsInternal() {
+    protected Set<PetInterface> getPetsInternal() {
         if (this.pets == null) {
             this.pets = new HashSet<>();
         }
         return this.pets;
     }
 
-    protected void setPetsInternal(Set<Pet> pets) {
+    protected void setPetsInternal(Set<PetInterface> pets) {
         this.pets = pets;
     }
 
-    public List<Pet> getPets() {
-        List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
+    public List<PetInterface> getPets() {
+        List<PetInterface> sortedPets = new ArrayList<>(getPetsInternal());
         PropertyComparator.sort(sortedPets,
                 new MutableSortDefinition("name", true, true));
         return Collections.unmodifiableList(sortedPets);
     }
 
-    public void addPet(Pet pet) {
-        if (pet.isNew()) {
-            getPetsInternal().add(pet);
+    public void addPet(PetInterface pet) {
+        if (((Pet) pet).isNew()) {
+            getPetsInternal().add((Pet) pet);
         }
         pet.setOwner(this);
     }
@@ -116,7 +118,7 @@ public class Owner extends Person {
      * @param name to test
      * @return true if pet name is already in use
      */
-    public Pet getPet(String name) {
+    public PetInterface getPet(String name) {
         return getPet(name, false);
     }
 
@@ -128,12 +130,12 @@ public class Owner extends Person {
      */
     public Pet getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
-        for (Pet pet : getPetsInternal()) {
-            if (!ignoreNew || !pet.isNew()) {
-                String compName = pet.getName();
+        for (PetInterface pet : getPetsInternal()) {
+            if (!ignoreNew || !((Pet) pet).isNew()) {
+                String compName = ((Pet) pet).getName();
                 compName = compName.toLowerCase();
                 if (compName.equals(name)) {
-                    return pet;
+                    return (Pet) pet;
                 }
             }
         }
