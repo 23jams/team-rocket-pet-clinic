@@ -49,7 +49,7 @@ public class ValidatorTests {
         LocaleContextHolder.setLocale(Locale.ENGLISH);
         Person person = new Person();
         person.setFirstName("John");
-        person.setLastName("Bob");
+        person.setLastName("");
 
         Validator validator = createValidator();
         Set<ConstraintViolation<Person>> constraintViolations = validator
