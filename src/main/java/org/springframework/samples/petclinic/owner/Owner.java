@@ -128,7 +128,7 @@ public class Owner extends Person {
      * @param name to test
      * @return true if pet name is already in use
      */
-    public Pet getPet(String name, boolean ignoreNew) {
+    public PetInterface getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
         for (PetInterface pet : getPetsInternal()) {
             if (!ignoreNew || !((Pet) pet).isNew()) {
