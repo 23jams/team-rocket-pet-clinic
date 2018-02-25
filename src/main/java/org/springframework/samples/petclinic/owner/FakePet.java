@@ -41,11 +41,7 @@ import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.visit.Visit;
 
 /**
- * Simple business object representing a pet.
- *
- * @author Ken Krebs
- * @author Juergen Hoeller
- * @author Sam Brannen
+ * Simple business object representing a fakepet.
  */
 @Entity
 @Table(name = "pets")

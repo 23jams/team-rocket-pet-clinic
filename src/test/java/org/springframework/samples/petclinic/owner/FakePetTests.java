@@ -45,7 +45,7 @@ public class FakePetTests {
 		String animalType = fakepet.getType().getName();
 		int typeID = fakepet.getType().getId();
 	
-	
+		
 		assertEquals(getId,12345);
 		assertEquals(getName,"Ducky");
 		assertEquals(fakepet.getVisits().size(),1);
