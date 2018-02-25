@@ -44,7 +44,7 @@ import org.springframework.samples.petclinic.model.Person;
  */
 @Entity
 @Table(name = "owners")
-public class Owner extends Person {
+public class DefaultOwner extends Person {
     @Column(name = "address")
     @NotEmpty
     private String address;
