@@ -44,7 +44,7 @@ import org.springframework.samples.petclinic.model.Person;
  */
 @Entity
 @Table(name = "owners")
-public class DefaultOwner extends Person {
+public class DefaultOwner extends Person implements Owner {
     @Column(name = "address")
     @NotEmpty
     private String address;
@@ -85,14 +85,14 @@ public class DefaultOwner extends Person {
         this.telephone = telephone;
     }
 
-    protected Set<Pet> getPetsInternal() {
+    public Set<Pet> getPetsInternal() {
         if (this.pets == null) {
             this.pets = new HashSet<>();
         }
         return this.pets;
     }
 
-    protected void setPetsInternal(Set<Pet> pets) {
+    public void setPetsInternal(Set<Pet> pets) {
         this.pets = pets;
     }
 
