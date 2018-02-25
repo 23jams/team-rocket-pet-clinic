@@ -67,30 +67,37 @@ public class Pet extends NamedEntity implements PetInterface {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
     private Set<Visit> visits = new LinkedHashSet<>();
 
+    @Override
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
+    @Override
     public Date getBirthDate() {
         return this.birthDate;
     }
 
+    @Override
     public PetType getType() {
         return this.type;
     }
 
+    @Override
     public void setType(PetType type) {
         this.type = type;
     }
 
+    @Override
     public Owner getOwner() {
         return this.owner;
     }
 
+    @Override
     public void setOwner(Owner owner) {
         this.owner = owner;
     }
 
+    @Override
     public Set<Visit> getVisitsInternal() {
         if (this.visits == null) {
             this.visits = new HashSet<>();
@@ -98,10 +105,12 @@ public class Pet extends NamedEntity implements PetInterface {
         return this.visits;
     }
 
+    @Override
     public void setVisitsInternal(Set<Visit> visits) {
         this.visits = visits;
     }
 
+    @Override
     public List<Visit> getVisits() {
         List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
         PropertyComparator.sort(sortedVisits,
@@ -109,6 +118,7 @@ public class Pet extends NamedEntity implements PetInterface {
         return Collections.unmodifiableList(sortedVisits);
     }
 
+    @Override
     public void addVisit(Visit visit) {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
