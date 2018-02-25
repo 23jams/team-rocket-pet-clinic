@@ -49,7 +49,7 @@ import org.springframework.samples.petclinic.visit.Visit;
  */
 @Entity
 @Table(name = "pets")
-public class Pet extends NamedEntity {
+public class Pet extends NamedEntity implements PetInterface {
 
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)
@@ -87,18 +87,18 @@ public class Pet extends NamedEntity {
         return this.owner;
     }
 
-    protected void setOwner(Owner owner) {
+    public void setOwner(Owner owner) {
         this.owner = owner;
     }
 
-    protected Set<Visit> getVisitsInternal() {
+    public Set<Visit> getVisitsInternal() {
         if (this.visits == null) {
             this.visits = new HashSet<>();
         }
         return this.visits;
     }
 
-    protected void setVisitsInternal(Set<Visit> visits) {
+    public void setVisitsInternal(Set<Visit> visits) {
         this.visits = visits;
     }
 
