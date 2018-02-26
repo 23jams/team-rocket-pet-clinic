@@ -15,6 +15,8 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
+import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.model.Person;
 
 public class FakeOwner extends Person implements OwnerInterface {
@@ -22,7 +24,7 @@ public class FakeOwner extends Person implements OwnerInterface {
 	private String address;
 	private String city;
 	private String telephone;
-	private Set<Pet> pets;
+	private Set<PetInterface> pets;
 
 	@Override
 	public String getAddress() {
@@ -55,7 +57,7 @@ public class FakeOwner extends Person implements OwnerInterface {
 	}
 
 	@Override
-	public Set<Pet> getPetsInternal() {
+	public Set<PetInterface> getPetsInternal() {
 		if (this.pets == null) {
             this.pets = new HashSet<>();
         }
@@ -63,37 +65,37 @@ public class FakeOwner extends Person implements OwnerInterface {
 	}
 
 	@Override
-	public void setPetsInternal(Set<Pet> pets) {
+	public void setPetsInternal(Set<PetInterface> pets) {
 		this.pets = pets;
 	}
 
 	@Override
-	public List<Pet> getPets() {
-		List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
+	public List<PetInterface> getPets() {
+		List<PetInterface> sortedPets = new ArrayList<>(getPetsInternal());
         PropertyComparator.sort(sortedPets,
                 new MutableSortDefinition("name", true, true));
         return Collections.unmodifiableList(sortedPets);
 	}
 
 	@Override
-	public void addPet(Pet pet) {
-		if (pet.isNew()) {
+	public void addPet(PetInterface pet) {
+		if (((Pet) pet).isNew()) {
 			getPetsInternal().add(pet);
 	    }
 	    pet.setOwner(this);
 	}
 
 	@Override
-	public Pet getPet(String name) {
+	public PetInterface getPet(String name) {
 		return getPet(name, false);
 	}
 
 	@Override
-	public Pet getPet(String name, boolean ignoreNew) {
+	public PetInterface getPet(String name, boolean ignoreNew) {
 		name = name.toLowerCase();
-        for (Pet pet : getPetsInternal()) {
-            if (!ignoreNew || !pet.isNew()) {
-                String compName = pet.getName();
+        for (PetInterface pet : getPetsInternal()) {
+            if (!ignoreNew || !((Pet) pet).isNew()) {
+                String compName = ((Pet) pet).getName();
                 compName = compName.toLowerCase();
                 if (compName.equals(name)) {
                     return pet;
