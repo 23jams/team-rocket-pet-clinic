@@ -38,7 +38,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.NamedEntity;
-import org.springframework.samples.petclinic.visit.Visit;
+import org.springframework.samples.petclinic.visit.VisitInterface;
 
 /**
  * Simple business object representing a pet.
@@ -65,7 +65,7 @@ public class Pet extends NamedEntity implements PetInterface {
     private OwnerInterface owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
-    private Set<Visit> visits = new LinkedHashSet<>();
+    private Set<VisitInterface> visits = new LinkedHashSet<>();
 
     @Override
     public void setBirthDate(Date birthDate) {
@@ -99,30 +99,31 @@ public class Pet extends NamedEntity implements PetInterface {
     }
 
     @Override
-    public Set<Visit> getVisitsInternal() {
-        if (this.visits == null) {
+    public Set<VisitInterface> getVisitsInternal() {
+    	if (this.visits == null) {
             this.visits = new HashSet<>();
         }
         return this.visits;
     }
 
     @Override
-    public void setVisitsInternal(Set<Visit> visits) {
-        this.visits = visits;
-    }
-
-    @Override
-    public List<Visit> getVisits() {
-        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+    public List<VisitInterface> getVisits() {
+        List<VisitInterface> sortedVisits = new ArrayList<>(getVisitsInternal());
         PropertyComparator.sort(sortedVisits,
                 new MutableSortDefinition("date", false, false));
         return Collections.unmodifiableList(sortedVisits);
     }
 
     @Override
-    public void addVisit(Visit visit) {
+    public void addVisit(VisitInterface visit) {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
+
+	@Override
+	public void setVisitsInternal(Set<VisitInterface> visits) {
+		   this.visits = visits;
+		
+	}
 
 }

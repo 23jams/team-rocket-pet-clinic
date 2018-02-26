@@ -21,6 +21,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.visit.Visit;
+import org.springframework.samples.petclinic.visit.VisitInterface;
 
 public interface PetInterface {
 
@@ -37,11 +38,11 @@ public interface PetInterface {
 
     public void setOwner(OwnerInterface owner);
 
-    public Set<Visit> getVisitsInternal();
+    public Set<VisitInterface> getVisitsInternal();
 
-    public void setVisitsInternal(Set<Visit> visits);
+    public void setVisitsInternal(Set<VisitInterface> visits);
 
-    public List<Visit> getVisits();
+    public List<VisitInterface> getVisits();
 
-    public void addVisit(Visit visit);
+    public void addVisit(VisitInterface visit);
 }

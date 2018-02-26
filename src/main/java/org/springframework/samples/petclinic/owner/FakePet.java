@@ -39,6 +39,7 @@ import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.visit.Visit;
+import org.springframework.samples.petclinic.visit.VisitInterface;
 
 /**
  * Simple business object representing a fakepet.
@@ -61,7 +62,7 @@ public class FakePet extends NamedEntity implements PetInterface {
     private OwnerInterface owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
-    private Set<Visit> visits = new LinkedHashSet<>();
+    private Set<VisitInterface> visits = new LinkedHashSet<>();
 
     @Override
     public void setBirthDate(Date birthDate) {
@@ -94,7 +95,7 @@ public class FakePet extends NamedEntity implements PetInterface {
     }
 
     @Override
-    public Set<Visit> getVisitsInternal() {
+    public Set<VisitInterface> getVisitsInternal() {
         if (this.visits == null) {
             this.visits = new HashSet<>();
         }
@@ -102,20 +103,20 @@ public class FakePet extends NamedEntity implements PetInterface {
     }
 
     @Override
-    public void setVisitsInternal(Set<Visit> visits) {
+    public void setVisitsInternal(Set<VisitInterface> visits) {
         this.visits = visits;
     }
 
     @Override
-    public List<Visit> getVisits() {
-        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
+    public List<VisitInterface> getVisits() {
+        List<VisitInterface> sortedVisits = new ArrayList<>(getVisitsInternal());
         PropertyComparator.sort(sortedVisits,
                 new MutableSortDefinition("date", false, false));
         return Collections.unmodifiableList(sortedVisits);
     }
 
     @Override
-    public void addVisit(Visit visit) {
+    public void addVisit(VisitInterface visit) {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }

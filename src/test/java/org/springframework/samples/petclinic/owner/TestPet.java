@@ -2,6 +2,9 @@ package org.springframework.samples.petclinic.owner;
 
 import static org.junit.Assert.*;
 
+import java.util.Date;
+
+import org.springframework.samples.petclinic.visit.FakeVisit;
 import org.junit.Test;
 
 /**
@@ -29,6 +32,23 @@ public class TestPet {
 		assertEquals("123 Street", pet.getOwner().getAddress());
 		assertEquals("Montreal", pet.getOwner().getCity());
 		assertEquals("999-999-9999", pet.getOwner().getTelephone());
+	}
+	
+	@Test
+	public void testVisit() {
+		Date date = new Date();
+		
+		FakeVisit fakeVisit = new FakeVisit();
+		fakeVisit.setDate(date);
+		fakeVisit.setDescription("Regular checkup.");
+		fakeVisit.setPetId(2);
+		
+//		Pet pet = new Pet();
+//		pet.addVisit(fakeVisit);
+		
+//		assertEquals(date, pet.getVisits().get(0).getDate());
+		assertEquals("Regular checkup.", fakeVisit.getDescription());
+		assertEquals(new Integer(2), fakeVisit.getPetId());
 	}
 
 }
