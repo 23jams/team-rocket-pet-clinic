@@ -16,7 +16,7 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 
 @Entity
 @Table(name = "visits")
-public class fakeVisit extends BaseEntity implements VisitInterface{
+public class FakeVisit extends BaseEntity implements VisitInterface{
 	    @Column(name = "visit_date")
 	    @Temporal(TemporalType.TIMESTAMP)
 	    @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -32,7 +32,7 @@ public class fakeVisit extends BaseEntity implements VisitInterface{
 	    /**
 	     * Creates a new instance of Visit for the current date
 	     */
-	    public fakeVisit() {
+	    public FakeVisit() {
 	        this.date = new Date();
 	    }
 
