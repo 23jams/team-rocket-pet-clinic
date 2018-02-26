@@ -38,18 +38,15 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.NamedEntity;
+import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitInterface;
 
 /**
- * Simple business object representing a pet.
- *
- * @author Ken Krebs
- * @author Juergen Hoeller
- * @author Sam Brannen
+ * Simple business object representing a fakepet.
  */
 @Entity
 @Table(name = "pets")
-public class Pet extends NamedEntity implements PetInterface {
+public class FakePet extends NamedEntity implements PetInterface {
 
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)
@@ -87,23 +84,27 @@ public class Pet extends NamedEntity implements PetInterface {
         this.type = type;
     }
 
-
     @Override
-    
     public OwnerInterface getOwner() {
         return this.owner;
     }
 
+    @Override
     public void setOwner(OwnerInterface owner) {
         this.owner = owner;
     }
 
     @Override
     public Set<VisitInterface> getVisitsInternal() {
-    	if (this.visits == null) {
+        if (this.visits == null) {
             this.visits = new HashSet<>();
         }
         return this.visits;
+    }
+
+    @Override
+    public void setVisitsInternal(Set<VisitInterface> visits) {
+        this.visits = visits;
     }
 
     @Override
@@ -119,11 +120,4 @@ public class Pet extends NamedEntity implements PetInterface {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
-
-	@Override
-	public void setVisitsInternal(Set<VisitInterface> visits) {
-		   this.visits = visits;
-		
-	}
-
 }
