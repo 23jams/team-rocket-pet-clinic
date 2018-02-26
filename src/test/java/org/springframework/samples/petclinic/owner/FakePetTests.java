@@ -24,7 +24,7 @@ public class FakePetTests {
 		//setting up an owner
 		fakepet.setOwner(owner);
 		owner.setId(555);
-		int ownerID = fakepet.getOwner().getId();
+		
 		
 		//setting a visit
 		visit.setId(12345);
@@ -51,7 +51,7 @@ public class FakePetTests {
 		assertEquals(fakepet.getVisits().size(),1);
 		assertEquals(animalType,"Duck");
 		assertEquals(typeID,2);
-		assertEquals(ownerID,555);
+	
 		
 	}
 }

@@ -33,9 +33,9 @@ public interface PetInterface {
 
     public void setType(PetType type);
 
-    public Owner getOwner();
+    public OwnerInterface getOwner();
 
-    public void setOwner(Owner owner);
+    public void setOwner(OwnerInterface owner);
 
     public Set<Visit> getVisitsInternal();
 

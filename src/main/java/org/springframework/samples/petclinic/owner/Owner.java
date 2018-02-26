@@ -87,22 +87,18 @@ public class Owner extends Person implements OwnerInterface {
         this.telephone = telephone;
     }
 
-<<<<<<< HEAD
-    protected Set<PetInterface> getPetsInternal() {
-=======
-    public Set<Pet> getPetsInternal() {
->>>>>>> 37cd6bdeac031b8fc3def2868d40e697b1bee505
+
+    public Set<PetInterface> getPetsInternal() {
+
         if (this.pets == null) {
             this.pets = new HashSet<>();
         }
         return this.pets;
     }
 
-<<<<<<< HEAD
-    protected void setPetsInternal(Set<PetInterface> pets) {
-=======
-    public void setPetsInternal(Set<Pet> pets) {
->>>>>>> 37cd6bdeac031b8fc3def2868d40e697b1bee505
+    @Override
+    public void setPetsInternal(Set<PetInterface> pets) {
+ 
         this.pets = pets;
     }
 

@@ -24,21 +24,13 @@ public interface OwnerInterface {
 
 	public void setTelephone(String telephone);
 
-	public Set<Pet> getPetsInternal();
+	public Set<PetInterface> getPetsInternal();
 
-	public void setPetsInternal(Set<Pet> pets);
+	public void setPetsInternal(Set<PetInterface> pets);
 
-	public List<Pet> getPets();
+	public List<PetInterface> getPets();
 
-	public void addPet(Pet pet);
-
-	/**
-	* Return the Pet with the given name, or null if none found for this Owner.
-	*
-	* @param name to test
-	* @return true if pet name is already in use
-	*/
-	public Pet getPet(String name);
+	public void addPet(PetInterface pet);
 
 	/**
 	* Return the Pet with the given name, or null if none found for this Owner.
@@ -46,7 +38,15 @@ public interface OwnerInterface {
 	* @param name to test
 	* @return true if pet name is already in use
 	*/
-	public Pet getPet(String name, boolean ignoreNew);
+	public PetInterface getPet(String name);
+
+	/**
+	* Return the Pet with the given name, or null if none found for this Owner.
+	*
+	* @param name to test
+	* @return true if pet name is already in use
+	*/
+	public PetInterface getPet(String name, boolean ignoreNew);
 
 	@Override
 	public String toString();

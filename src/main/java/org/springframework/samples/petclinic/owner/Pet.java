@@ -87,21 +87,14 @@ public class Pet extends NamedEntity implements PetInterface {
         this.type = type;
     }
 
-<<<<<<< HEAD
-    @Override
-    public Owner getOwner() {
-        return this.owner;
-    }
 
     @Override
-    public void setOwner(Owner owner) {
-=======
+    
     public OwnerInterface getOwner() {
         return this.owner;
     }
 
-    protected void setOwner(OwnerInterface owner) {
->>>>>>> 37cd6bdeac031b8fc3def2868d40e697b1bee505
+    public void setOwner(OwnerInterface owner) {
         this.owner = owner;
     }
 

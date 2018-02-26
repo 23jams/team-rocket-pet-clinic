@@ -58,7 +58,7 @@ public class FakePet extends NamedEntity implements PetInterface {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private Owner owner;
+    private OwnerInterface owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
     private Set<Visit> visits = new LinkedHashSet<>();
@@ -84,12 +84,12 @@ public class FakePet extends NamedEntity implements PetInterface {
     }
 
     @Override
-    public Owner getOwner() {
+    public OwnerInterface getOwner() {
         return this.owner;
     }
 
     @Override
-    public void setOwner(Owner owner) {
+    public void setOwner(OwnerInterface owner) {
         this.owner = owner;
     }
 
@@ -119,5 +119,4 @@ public class FakePet extends NamedEntity implements PetInterface {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
-
 }
