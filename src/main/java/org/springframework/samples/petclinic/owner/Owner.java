@@ -46,7 +46,7 @@ import org.springframework.samples.petclinic.model.Person;
  */
 @Entity
 @Table(name = "owners")
-public class Owner extends Person implements OwnerInterface {
+public class Owner extends Person {
     @Column(name = "address")
     @NotEmpty
     private String address;
@@ -61,7 +61,7 @@ public class Owner extends Person implements OwnerInterface {
     private String telephone;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
-    private Set<PetInterface> pets;
+    private Set<Pet> pets;
 
     public String getAddress() {
         return this.address;
@@ -88,7 +88,7 @@ public class Owner extends Person implements OwnerInterface {
     }
 
 
-    public Set<PetInterface> getPetsInternal() {
+    public Set<Pet> getPetsInternal() {
 
         if (this.pets == null) {
             this.pets = new HashSet<>();
@@ -96,20 +96,18 @@ public class Owner extends Person implements OwnerInterface {
         return this.pets;
     }
 
-    @Override
-    public void setPetsInternal(Set<PetInterface> pets) {
- 
+    public void setPetsInternal(Set<Pet> pets) {
         this.pets = pets;
     }
 
-    public List<PetInterface> getPets() {
-        List<PetInterface> sortedPets = new ArrayList<>(getPetsInternal());
+    public List<Pet> getPets() {
+        List<Pet> sortedPets = new ArrayList<>(getPetsInternal());
         PropertyComparator.sort(sortedPets,
                 new MutableSortDefinition("name", true, true));
         return Collections.unmodifiableList(sortedPets);
     }
 
-    public void addPet(PetInterface pet) {
+    public void addPet(Pet pet) {
         if (((Pet) pet).isNew()) {
             getPetsInternal().add((Pet) pet);
         }
@@ -122,7 +120,7 @@ public class Owner extends Person implements OwnerInterface {
      * @param name to test
      * @return true if pet name is already in use
      */
-    public PetInterface getPet(String name) {
+    public Pet getPet(String name) {
         return getPet(name, false);
     }
 
@@ -132,9 +130,9 @@ public class Owner extends Person implements OwnerInterface {
      * @param name to test
      * @return true if pet name is already in use
      */
-    public PetInterface getPet(String name, boolean ignoreNew) {
+    public Pet getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
-        for (PetInterface pet : getPetsInternal()) {
+        for (Pet pet : getPetsInternal()) {
             if (!ignoreNew || !((Pet) pet).isNew()) {
                 String compName = ((Pet) pet).getName();
                 compName = compName.toLowerCase();

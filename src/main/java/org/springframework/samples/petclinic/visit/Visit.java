@@ -35,7 +35,7 @@ import org.springframework.samples.petclinic.model.BaseEntity;
  */
 @Entity
 @Table(name = "visits")
-public class Visit extends BaseEntity implements VisitInterface{
+public class Visit extends BaseEntity {
 
     @Column(name = "visit_date")
     @Temporal(TemporalType.TIMESTAMP)
