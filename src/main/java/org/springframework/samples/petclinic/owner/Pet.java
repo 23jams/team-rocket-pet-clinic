@@ -87,15 +87,19 @@ public class Pet extends NamedEntity {
         return this.owner;
     }
 
-    public void setOwner(Owner owner) {
+    protected void setOwner(Owner owner) {
         this.owner = owner;
     }
 
-    public Set<Visit> getVisitsInternal() {
-    	if (this.visits == null) {
+    protected Set<Visit> getVisitsInternal() {
+        if (this.visits == null) {
             this.visits = new HashSet<>();
         }
         return this.visits;
+    }
+
+    protected void setVisitsInternal(Set<Visit> visits) {
+        this.visits = visits;
     }
 
     public List<Visit> getVisits() {
@@ -109,10 +113,5 @@ public class Pet extends NamedEntity {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
-
-	public void setVisitsInternal(Set<Visit> visits) {
-		   this.visits = visits;
-		
-	}
 
 }

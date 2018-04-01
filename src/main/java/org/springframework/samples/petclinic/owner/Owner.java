@@ -32,8 +32,6 @@ import javax.validation.constraints.NotEmpty;
 import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.core.style.ToStringCreator;
-import org.springframework.samples.petclinic.model.BaseEntity;
-import org.springframework.samples.petclinic.model.NamedEntity;
 import org.springframework.samples.petclinic.model.Person;
 
 /**
@@ -87,16 +85,14 @@ public class Owner extends Person {
         this.telephone = telephone;
     }
 
-
-    public Set<Pet> getPetsInternal() {
-
+    protected Set<Pet> getPetsInternal() {
         if (this.pets == null) {
             this.pets = new HashSet<>();
         }
         return this.pets;
     }
 
-    public void setPetsInternal(Set<Pet> pets) {
+    protected void setPetsInternal(Set<Pet> pets) {
         this.pets = pets;
     }
 
@@ -108,8 +104,8 @@ public class Owner extends Person {
     }
 
     public void addPet(Pet pet) {
-        if (((Pet) pet).isNew()) {
-            getPetsInternal().add((Pet) pet);
+        if (pet.isNew()) {
+            getPetsInternal().add(pet);
         }
         pet.setOwner(this);
     }
@@ -133,11 +129,11 @@ public class Owner extends Person {
     public Pet getPet(String name, boolean ignoreNew) {
         name = name.toLowerCase();
         for (Pet pet : getPetsInternal()) {
-            if (!ignoreNew || !((Pet) pet).isNew()) {
-                String compName = ((Pet) pet).getName();
+            if (!ignoreNew || !pet.isNew()) {
+                String compName = pet.getName();
                 compName = compName.toLowerCase();
                 if (compName.equals(name)) {
-                    return (Pet) pet;
+                    return pet;
                 }
             }
         }
