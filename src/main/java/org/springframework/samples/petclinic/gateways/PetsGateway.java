@@ -45,6 +45,7 @@ public class PetsGateway extends MysqlGateway {
 			petTypeGateway.disconnect();
 			OwnersGateway ownerGateway = new OwnersGateway();
 			pet.setOwner(ownerGateway.findById(id));
+			ownerGateway.disconnect();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
