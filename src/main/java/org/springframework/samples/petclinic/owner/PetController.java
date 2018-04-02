@@ -75,6 +75,23 @@ class PetController {
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
+    //tests for HSQL only
+    @PostMapping("/pets/new")
+    public String testProcessCreationFormHSQLONLY(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
+        if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null){
+            result.rejectValue("name", "duplicate", "already exists");
+        }
+        owner.addPet(pet);
+        if (result.hasErrors()) {
+            model.put("pet", pet);
+            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+        } else {
+        	//saves to HSQL
+            this.pets.save(pet);
+            return "redirect:/owners/{ownerId}";
+        }
+    }
+    
     @PostMapping("/pets/new")
     public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, ModelMap model) {
         if (StringUtils.hasLength(pet.getName()) && pet.isNew() && owner.getPet(pet.getName(), true) != null){
@@ -100,6 +117,21 @@ class PetController {
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
 
+    //tests for HSQL only
+    @PostMapping("/pets/{petId}/edit")
+    public String testProcessUpdateFormHSQLONLY(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
+        if (result.hasErrors()) {
+            pet.setOwner(owner);
+            model.put("pet", pet);
+            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+        } else {
+            owner.addPet(pet);
+            //save to HSQL
+            this.pets.save(pet);
+            return "redirect:/owners/{ownerId}";
+        }
+    }
+    
     @PostMapping("/pets/{petId}/edit")
     public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, ModelMap model) {
         if (result.hasErrors()) {
