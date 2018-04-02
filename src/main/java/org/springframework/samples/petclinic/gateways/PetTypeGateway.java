@@ -1,10 +1,12 @@
 package org.springframework.samples.petclinic.gateways;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.samples.petclinic.owner.Pet;
 import org.springframework.samples.petclinic.owner.PetType;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -22,7 +24,7 @@ public class PetTypeGateway extends MysqlGateway {
 			type.setId(resultSet.getInt("id"));
 			type.setName(name);
 		} catch (SQLException e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Exception: " + e.getMessage());
 		}
 		return type;
 	}
@@ -37,7 +39,7 @@ public class PetTypeGateway extends MysqlGateway {
 			type.setId(id);
 			type.setName(resultSet.getString("name"));
 		} catch (SQLException e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Exception: " + e.getMessage());
 		}
 		return type;
 	}
@@ -56,9 +58,22 @@ public class PetTypeGateway extends MysqlGateway {
 			}
 			
 		} catch (Exception e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Exception: " + e.getMessage());
 		}
 		return collection;
 	}
 	
+	public void save(PetType type) {
+		try {
+			String query = "INSERT INTO types(id, name) "
+	        		+ "VALUES(?, ?)";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setInt(1, type.getId());
+	        preparedStatement.setString(2, type.getName());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("PetType Save Exception: " + e.getMessage());
+		}
+	}
 }

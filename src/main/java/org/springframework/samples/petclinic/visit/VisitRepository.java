@@ -15,11 +15,15 @@
  */
 package org.springframework.samples.petclinic.visit;
 
+import java.util.Collection;
 import java.util.List;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.repository.Repository;
 import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.vet.Vet;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repository class for <code>Visit</code> domain objects All method names are compliant with Spring Data naming
@@ -41,5 +45,13 @@ public interface VisitRepository extends Repository<Visit, Integer> {
     void save(Visit visit) throws DataAccessException;
 
     List<Visit> findByPetId(Integer petId);
+    
+    /**
+     * Retrieve all <code>Vet</code>s from the data store.
+     *
+     * @return a <code>Collection</code> of <code>Vet</code>s
+     */
+    @Transactional(readOnly = true)
+    List<Visit> findAll() throws DataAccessException;
 
 }

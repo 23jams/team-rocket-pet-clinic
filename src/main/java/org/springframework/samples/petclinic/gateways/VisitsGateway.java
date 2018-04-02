@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.gateways;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import org.springframework.samples.petclinic.visit.Visit;
 
@@ -14,14 +15,13 @@ public class VisitsGateway extends MysqlGateway {
 	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
 	        preparedStatement.setInt(1, visit.getId());
 	        preparedStatement.setInt(2,  visit.getPetId());
-	        preparedStatement.setDate(3, (Date) visit.getDate());
+	        Date date = new Date(((Timestamp) visit.getDate()).getTime());
+	        preparedStatement.setDate(3, date);
 	        preparedStatement.setString(4, visit.getDescription());
-	        
 	        preparedStatement.executeUpdate();
-	        
 	        preparedStatement.close();
 		} catch (Exception e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Visit Save Exception: " + e.getMessage());
 		}
 	}
 }

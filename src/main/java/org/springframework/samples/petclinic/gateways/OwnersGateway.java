@@ -29,12 +29,10 @@ public class OwnersGateway extends MysqlGateway {
 	        preparedStatement.setString(4, owner.getAddress());
 	        preparedStatement.setString(5, owner.getCity());
 	        preparedStatement.setString(6, owner.getTelephone());
-	        
 	        preparedStatement.executeUpdate();
-	        
 	        preparedStatement.close();
 		} catch (Exception e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Owner Save Exception: " + e.getMessage());
 		}
 	}
 	
