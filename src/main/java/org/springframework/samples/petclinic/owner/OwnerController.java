@@ -115,7 +115,7 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-    //Saves to HSQL
+    
     @PostMapping("/owners/{ownerId}/edit")
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
         if (result.hasErrors()) {
