@@ -62,20 +62,7 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-
-    //Tests for HSQL only
-    @PostMapping("/owners/new")
-    public String testProcessCreationFormHSQLONLY(@Valid Owner owner, BindingResult result) {
-        if (result.hasErrors()) {
-            return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-        } else {
-        	//saves to HSQL
-            this.owners.save(owner);
-            return "redirect:/owners/" + owner.getId();
-        }
-    }
-    
-    
+  
     @PostMapping("/owners/new")
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
@@ -128,19 +115,6 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
-    
-    //Tests for HSQL only
-    @PostMapping("/owners/{ownerId}/edit")
-    public String testProcessUpdateOwnerFormHSQLONLY(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
-        if (result.hasErrors()) {
-            return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
-        } else {
-            owner.setId(ownerId);
-            //saves to HSQL
-            this.owners.save(owner);
-            return "redirect:/owners/{ownerId}";
-        }
-    }
     
     @PostMapping("/owners/{ownerId}/edit")
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {

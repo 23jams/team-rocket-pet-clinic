@@ -93,16 +93,4 @@ class VisitController {
         }
     }
     
-    //tests for HSQL only
-    @PostMapping("/owners/{ownerId}/pets/{petId}/visits/new")
-    public String testProcessNewVisitFormHSQLONLY(@Valid Visit visit, BindingResult result) {
-        if (result.hasErrors()) {
-            return "pets/createOrUpdateVisitForm";
-        } else {
-        	//saves to HSQL
-            this.visits.save(visit);
-            return "redirect:/owners/{ownerId}";
-        }
-    }
-    
 }
