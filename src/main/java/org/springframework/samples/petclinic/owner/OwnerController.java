@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.OwnersGateway;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -43,6 +44,7 @@ class OwnerController {
     private final OwnerRepository owners;
 
 
+    OwnersGateway ownersGateway = new OwnersGateway();
     @Autowired
     public OwnerController(OwnerRepository clinicService) {
         this.owners = clinicService;
@@ -60,12 +62,17 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
+  
     @PostMapping("/owners/new")
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
+        	//saves to HSQL
             this.owners.save(owner);
+            //saves to SQL (shadow write)
+            this.ownersGateway.save(owner);
+            ownersGateway.disconnect();
             return "redirect:/owners/" + owner.getId();
         }
     }
@@ -108,16 +115,22 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
+    //Saves to HSQL
     @PostMapping("/owners/{ownerId}/edit")
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
             owner.setId(ownerId);
+            //saves to HSQL
             this.owners.save(owner);
+            //saves to SQL (shadow write)
+            this.ownersGateway.save(owner);
+            ownersGateway.disconnect();
             return "redirect:/owners/{ownerId}";
         }
     }
+    
 
     /**
      * Custom handler for displaying an owner.
@@ -131,5 +144,7 @@ class OwnerController {
         mav.addObject(this.owners.findById(ownerId));
         return mav;
     }
+    
+    
 
 }

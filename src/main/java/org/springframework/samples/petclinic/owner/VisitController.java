@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.VisitsGateway;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,7 @@ class VisitController {
 
     private final VisitRepository visits;
     private final PetRepository pets;
+    VisitsGateway visitsGateway = new VisitsGateway();
 
 
     @Autowired
@@ -82,9 +84,13 @@ class VisitController {
         if (result.hasErrors()) {
             return "pets/createOrUpdateVisitForm";
         } else {
+        	//saves to HSQL
             this.visits.save(visit);
+            //saves to SQL
+            this.visitsGateway.save(visit);
+            visitsGateway.disconnect();
             return "redirect:/owners/{ownerId}";
         }
     }
-
+    
 }
