@@ -11,22 +11,18 @@ import com.mysql.jdbc.PreparedStatement;
 public class PetsGateway extends MysqlGateway {
 	public void save(Pet pet) {
 		try {
-			PetTypeGateway petTypeGateway = new PetTypeGateway();
 			String query = "INSERT INTO pets(id, name, birth_date, type_id, owner_id) "
 	        		+ "VALUES(?, ?, ?, ?, ?)";
 	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
 	        preparedStatement.setInt(1, pet.getId());
 	        preparedStatement.setString(2, pet.getName());
 	        preparedStatement.setDate(3, (Date) pet.getBirthDate());
-	        preparedStatement.setInt(4, petTypeGateway.findByName(pet.getType().getName()).getId());
-	        petTypeGateway.disconnect();
+	        preparedStatement.setInt(4, pet.getType().getId());
 	        preparedStatement.setInt(5, pet.getOwner().getId());
-	        
 	        preparedStatement.executeUpdate();
-	        
 	        preparedStatement.close();
 		} catch (Exception e) {
-			System.err.println("Save Exception: " + e.getMessage());
+			System.err.println("Pet Save Exception: " + e.getMessage());
 		}
 	}
 	
