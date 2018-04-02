@@ -4,11 +4,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.springframework.samples.petclinic.vet.Specialty;
+
 import org.springframework.samples.petclinic.vet.Vet;
 
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
+
 
 public class VetsGateway extends MysqlGateway {
 

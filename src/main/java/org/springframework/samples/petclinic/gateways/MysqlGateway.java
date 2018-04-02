@@ -28,7 +28,7 @@ public class MysqlGateway {
 		this.port = 3306;
 		this.dbName = "petclinic";
 		this.user = "root";
-		this.password = "root";
+		this.password = "4everdreamingfish1835!";
 		this.connect();
 	}
 	

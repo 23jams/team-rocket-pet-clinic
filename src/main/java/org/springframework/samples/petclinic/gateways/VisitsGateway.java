@@ -1,13 +1,40 @@
 package org.springframework.samples.petclinic.gateways;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import org.springframework.samples.petclinic.visit.Visit;
 
 import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
 
 public class VisitsGateway extends MysqlGateway {
+	
+
+	public Visit findById(int id) {
+		Visit visit = new Visit();
+		String query = "SELECT * FROM visits WHERE id = ?";
+		try {
+			PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+			preparedStatement.setInt(0, id);
+			ResultSet resultSet = preparedStatement.executeQuery();
+			visit.setId(resultSet.getInt("id"));
+			visit.setPetId(resultSet.getInt("pet_id"));
+			visit.setDate(resultSet.getDate("visit_date"));
+			visit.setDescription(resultSet.getString("description"));
+			VisitsGateway visitGateway = new VisitsGateway();
+			visitGateway.disconnect();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return visit;
+	}
+	
+	
 	public void save(Visit visit) {
 		try {
 			String query = "INSERT INTO visits(id, pet_id, visit_date, description) "
