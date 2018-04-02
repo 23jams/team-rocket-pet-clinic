@@ -28,7 +28,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
-
 @Controller
 public class ConsistencyChecker {
 	// contains consistency checkers
@@ -40,42 +39,32 @@ public class ConsistencyChecker {
 	final VetRepository vetRepo;
 	final VisitRepository visitRepo;
 
-	// Gateways for MySQL
-	private VetsGateway vetsGateway;
-	private SpecialtiesGateway specGateway;
-	private OwnersGateway ownersGateway;
-	private PetTypeGateway petTypeGateway;
-	private PetsGateway petsGateway;
-	private VisitsGateway visitsGateway;
-	private VetSpecialtiesGateway vetSpecGateway;
-
 	@Autowired
 	public ConsistencyChecker(OwnerRepository clinicService, PetRepository petRepo, VetRepository vetRepo,
-			VisitRepository visitRepo, VetsGateway vetsGate, SpecialtiesGateway specialties, OwnersGateway ownersgate,
-			PetTypeGateway petTypeGate, PetsGateway petGate, VisitsGateway visitGate,
-			VetSpecialtiesGateway vetSpecGate) {
+			VisitRepository visitRepo) {
 		this.ownerRepo = clinicService;
 		this.petRepo = petRepo;
 		this.vetRepo = vetRepo;
 		this.visitRepo = visitRepo;
-
-		this.vetsGateway = vetsGate;
-		this.specGateway = specialties;
-		this.ownersGateway = ownersgate;
-		this.petTypeGateway = petTypeGate;
-		this.petsGateway = petGate;
-		this.visitsGateway = visitGate;
-		this.vetSpecGateway = vetSpecGate;
 	}
 
 	@Async
-	@Scheduled(fixedRate = (1000*10))
+	@Scheduled(fixedRate = (1000 * 10))
 	public void checkConsistency() {
 		// Fetch all data from HSQLDB
 		Collection<Owner> owners = ownerRepo.findAll();
 		List<Pet> pets = petRepo.findAll();
 		Collection<Vet> vets = vetRepo.findAll();
 		List<Visit> visits = visitRepo.findAll();
+
+		// Gateways for MySQL
+		VetsGateway vetsGateway = new VetsGateway();
+		SpecialtiesGateway specGateway = new SpecialtiesGateway();
+		OwnersGateway ownersGateway = new OwnersGateway();
+		PetTypeGateway petTypeGateway = new PetTypeGateway();
+		PetsGateway petsGateway = new PetsGateway();
+		VisitsGateway visitsGateway = new VisitsGateway();
+		VetSpecialtiesGateway vetSpecGateway = new VetSpecialtiesGateway();
 
 		Collection<Vet> vetsSql = vetsGateway.findAll();
 
