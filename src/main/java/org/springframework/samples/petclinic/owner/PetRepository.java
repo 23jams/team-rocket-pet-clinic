@@ -37,7 +37,7 @@ public interface PetRepository extends Repository<Pet, Integer> {
      * Retrieve all {@link PetType}s from the data store.
      * @return a Collection of {@link PetType}s.
      */
-    @Query("SELECT ptype FROM PetType ptype ORDER BY ptype.name")
+    @Query("SELECT ptype FROM PetType ORDER BY ptype.name")
     @Transactional(readOnly = true)
     List<PetType> findPetTypes();
 
