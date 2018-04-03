@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.OwnersGateway;
 import org.springframework.samples.petclinic.gateways.PetsGateway;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -37,19 +38,13 @@ import java.util.Collection;
 class PetController {
 
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
-    private final PetRepository pets;
-    private final OwnerRepository owners;
-    PetsGateway petsGateway = new PetsGateway();
+    private final OwnersGateway owners;
+    final PetsGateway petsGateway;
 
     @Autowired
-    public PetController(PetRepository pets, OwnerRepository owners) {
-        this.pets = pets;
+    public PetController(PetsGateway pets, OwnersGateway owners) {
+        this.petsGateway = pets;
         this.owners = owners;
-    }
-
-    @ModelAttribute("types")
-    public Collection<PetType> populatePetTypes() {
-        return this.pets.findPetTypes();
     }
 
     @ModelAttribute("owner")
@@ -86,7 +81,7 @@ class PetController {
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
         } else {
         	//saves to HSQL
-            this.pets.save(pet);
+            this.petsGateway.save(pet);
             //saves to SQL (shadow write)
             this.petsGateway.save(pet);
             return "redirect:/owners/{ownerId}";
@@ -95,7 +90,7 @@ class PetController {
 
     @GetMapping("/pets/{petId}/edit")
     public String initUpdateForm(@PathVariable("petId") int petId, ModelMap model) {
-        Pet pet = this.pets.findById(petId);
+        Pet pet = this.petsGateway.findById(petId);
         model.put("pet", pet);
         return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
     }
@@ -109,7 +104,7 @@ class PetController {
         } else {
             owner.addPet(pet);
             //save to HSQL
-            this.pets.save(pet);
+            this.petsGateway.save(pet);
             //save to SQL (Shadow write)
             this.petsGateway.save(pet);
             petsGateway.disconnect();
