@@ -36,6 +36,24 @@ public class OwnersGateway extends MysqlGateway {
 		}
 	}
 	
+	public void update(Owner owner) {
+		try {
+			String query = "UPDATE owners SET (first_name = ?, last_name = ?, address = ?, city = ?, telephone = ? "
+					+ " WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1,  owner.getFirstName());
+	        preparedStatement.setString(2, owner.getLastName());
+	        preparedStatement.setString(3, owner.getAddress());
+	        preparedStatement.setString(4, owner.getCity());
+	        preparedStatement.setString(5, owner.getTelephone());
+	        preparedStatement.setInt(6, owner.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("Owner Update Exception: " + e.getMessage());
+		}
+	}
+	
 	public Collection<Owner> findByLastName(String lastName) {
 		Collection<Owner> collection = new ArrayList<Owner>();
 		String query = "SELECT * FROM owners";

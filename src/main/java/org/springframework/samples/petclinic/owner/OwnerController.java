@@ -29,6 +29,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -42,6 +43,14 @@ class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
+    
+    //Inconsistencies for reads
+    int readInconsistencies = 0;
+    
+    //Allows to check for if there was an inconsistency with the read.
+    public int getReadInconsistencies() {
+    	return readInconsistencies;
+    }
 
 
     OwnersGateway ownersGateway = new OwnersGateway();
@@ -85,14 +94,36 @@ class OwnerController {
 
     @GetMapping("/owners")
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
-
+    	
         // allow parameterless GET request for /owners to return all records
         if (owner.getLastName() == null) {
             owner.setLastName(""); // empty string signifies broadest possible search
         }
 
-        // find owners by last name
+        // find owners by last name from old data base
         Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
+        
+        // find owners by last name from New Database (For shadow reads)
+        Collection<Owner> actual = this.ownersGateway.findByLastName(owner.getLastName());
+        
+        if (!results.equals(actual)) {
+        	
+        	//Used to compare two collections
+        	Iterator<Owner> actualIt = actual.iterator();
+        	
+        	//fix inconsistency individually in collections
+        	for (Owner people:results) {
+        		
+        		if(!people.equals(actualIt.next())){
+        			
+        			//Count inconsistencies
+                	readInconsistencies++;
+        			this.ownersGateway.update(people);
+        		}
+        	}
+        	
+        }
+        
         if (results.isEmpty()) {
             // no owners found
             result.rejectValue("lastName", "notFound", "not found");
