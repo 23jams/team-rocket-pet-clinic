@@ -41,13 +41,11 @@ import java.util.Map;
 class OwnerController {
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
-    private final OwnerRepository owners;
-
-
-    OwnersGateway ownersGateway = new OwnersGateway();
+    final OwnersGateway ownersGateway;
+    
     @Autowired
-    public OwnerController(OwnerRepository clinicService) {
-        this.owners = clinicService;
+    public OwnerController(OwnersGateway clinicService) {
+        this.ownersGateway = clinicService;
     }
 
     @InitBinder
@@ -68,11 +66,8 @@ class OwnerController {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
-        	//saves to HSQL
-            this.owners.save(owner);
-            //saves to SQL (shadow write)
             this.ownersGateway.save(owner);
-            ownersGateway.disconnect();
+            this.ownersGateway.disconnect();
             return "redirect:/owners/" + owner.getId();
         }
     }
@@ -92,7 +87,7 @@ class OwnerController {
         }
 
         // find owners by last name
-        Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
+        Collection<Owner> results = this.ownersGateway.findByLastName(owner.getLastName());
         if (results.isEmpty()) {
             // no owners found
             result.rejectValue("lastName", "notFound", "not found");
@@ -110,7 +105,7 @@ class OwnerController {
 
     @GetMapping("/owners/{ownerId}/edit")
     public String initUpdateOwnerForm(@PathVariable("ownerId") int ownerId, Model model) {
-        Owner owner = this.owners.findById(ownerId);
+        Owner owner = this.ownersGateway.findById(ownerId);
         model.addAttribute(owner);
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
@@ -123,7 +118,7 @@ class OwnerController {
         } else {
             owner.setId(ownerId);
             //saves to HSQL
-            this.owners.save(owner);
+            this.ownersGateway.save(owner);
             //saves to SQL (shadow write)
             this.ownersGateway.save(owner);
             ownersGateway.disconnect();
@@ -141,7 +136,7 @@ class OwnerController {
     @GetMapping("/owners/{ownerId}")
     public ModelAndView showOwner(@PathVariable("ownerId") int ownerId) {
         ModelAndView mav = new ModelAndView("owners/ownerDetails");
-        mav.addObject(this.owners.findById(ownerId));
+        mav.addObject(this.ownersGateway.findById(ownerId));
         return mav;
     }
     
