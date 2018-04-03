@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.vet;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.VetsGateway;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -31,11 +32,11 @@ import java.util.Map;
 @Controller
 class VetController {
 
-    private final VetRepository vets;
+    private final VetsGateway vetsGateway;
 
     @Autowired
-    public VetController(VetRepository clinicService) {
-        this.vets = clinicService;
+    public VetController(VetsGateway clinicService) {
+        this.vetsGateway = clinicService;
     }
 
     @GetMapping("/vets.html")
@@ -43,7 +44,7 @@ class VetController {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet
         // objects so it is simpler for Object-Xml mapping
         Vets vets = new Vets();
-        vets.getVetList().addAll(this.vets.findAll());
+        vets.getVetList().addAll(this.vetsGateway.findAll());
         model.put("vets", vets);
         return "vets/vetList";
     }
@@ -53,7 +54,7 @@ class VetController {
         // Here we are returning an object of type 'Vets' rather than a collection of Vet
         // objects so it is simpler for JSon/Object mapping
         Vets vets = new Vets();
-        vets.getVetList().addAll(this.vets.findAll());
+        vets.getVetList().addAll(this.vetsGateway.findAll());
         return vets;
     }
 
