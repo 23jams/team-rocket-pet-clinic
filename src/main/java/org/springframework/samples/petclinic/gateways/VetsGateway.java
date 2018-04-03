@@ -53,4 +53,22 @@ public class VetsGateway extends MysqlGateway {
 		}
 	}
 	
+	//Update vet table values based by id
+	public void update(Vet vet) {
+		try {
+			String query = "UPDATE vets SET first_name = ?, last_name = ? "
+	        		+ "WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1, vet.getFirstName());
+	        preparedStatement.setString(2, vet.getLastName());
+	        preparedStatement.setInt(3, vet.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+	        
+	        
+		} catch (Exception e) {
+			System.err.println("Vets Update Exception: " + e.getMessage());
+		}
+	}
+	
 }

@@ -76,4 +76,19 @@ public class PetTypeGateway extends MysqlGateway {
 			System.err.println("PetType Save Exception: " + e.getMessage());
 		}
 	}
+	
+	//Update types table values based by id
+	public void update(PetType type) {
+		try {
+			String query = "UPDATE types SET name = ? "
+	        		+ "WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1, type.getName());
+	        preparedStatement.setInt(2, type.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("PetType Update Exception: " + e.getMessage());
+		}
+	}
 }

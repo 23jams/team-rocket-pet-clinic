@@ -26,6 +26,23 @@ public class PetsGateway extends MysqlGateway {
 		}
 	}
 	
+	public void update(Pet pet) {
+		try {
+			String query = "UPDATE pets SET name = ?, birth_date = ?, type_id = ?, owner_id = ?"
+					+ " WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1, pet.getName());
+	        preparedStatement.setDate(2, (Date) pet.getBirthDate());
+	        preparedStatement.setInt(3, pet.getType().getId());
+	        preparedStatement.setInt(4, pet.getOwner().getId());
+	        preparedStatement.setInt(5, pet.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("Pet Update Exception: " + e.getMessage());
+		}
+	}
+	
 	public Pet findById(int id) {
 		Pet pet = new Pet();
 		String query = "SELECT * FROM pet WHERE id = ?";

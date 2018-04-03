@@ -36,6 +36,7 @@ public class OwnersGateway extends MysqlGateway {
 		}
 	}
 	
+	//Update owner table values based by id
 	public void update(Owner owner) {
 		try {
 			String query = "UPDATE owners SET (first_name = ?, last_name = ?, address = ?, city = ?, telephone = ? "

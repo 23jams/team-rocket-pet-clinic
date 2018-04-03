@@ -51,4 +51,20 @@ public class SpecialtiesGateway extends MysqlGateway {
 			System.err.println("Specialty Save Exception: " + e.getMessage());
 		}
 	}
+	
+	//Update specialty table values based by id
+	public void update(Specialty specialty) {
+		try {	        
+			String query = "UPDATE specialties SET name = ? "
+	        		+ "WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1, specialty.getName());
+	        preparedStatement.setInt(2, specialty.getId());
+	        preparedStatement.executeUpdate();
+        	preparedStatement.close();
+	        
+		} catch (Exception e) {
+			System.err.println("Specialty Update Exception: " + e.getMessage());
+		}
+	}
 }

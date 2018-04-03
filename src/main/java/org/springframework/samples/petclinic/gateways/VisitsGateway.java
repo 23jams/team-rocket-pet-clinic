@@ -51,4 +51,21 @@ public class VisitsGateway extends MysqlGateway {
 			System.err.println("Visit Save Exception: " + e.getMessage());
 		}
 	}
+	
+	//Update visit table values based by id
+	public void update(Visit visit) {
+		try {
+			String query = "UPDATE visits SET pet_id = ?, visit_date = ?, description = ? "
+	        		+ "WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setInt(1,  visit.getPetId());
+	        preparedStatement.setDate(2, (Date) visit.getDate());
+	        preparedStatement.setString(3, visit.getDescription());
+	        preparedStatement.setInt(4, visit.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("Visit Update Exception: " + e.getMessage());
+		}
+	}
 }
