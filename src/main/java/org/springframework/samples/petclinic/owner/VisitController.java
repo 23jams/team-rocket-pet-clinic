@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.PetsGateway;
 import org.springframework.samples.petclinic.gateways.VisitsGateway;
 import org.springframework.samples.petclinic.visit.Visit;
 import org.springframework.samples.petclinic.visit.VisitRepository;
@@ -37,15 +38,14 @@ import java.util.Map;
 @Controller
 class VisitController {
 
-    private final VisitRepository visits;
-    private final PetRepository pets;
-    VisitsGateway visitsGateway = new VisitsGateway();
+    private final PetsGateway petsGateway;
+    final VisitsGateway visitsGateway;
 
 
     @Autowired
-    public VisitController(VisitRepository visits, PetRepository pets) {
-        this.visits = visits;
-        this.pets = pets;
+    public VisitController(VisitsGateway visits, PetsGateway pets) {
+        this.visitsGateway = visits;
+        this.petsGateway = pets;
     }
 
     @InitBinder
@@ -65,7 +65,7 @@ class VisitController {
      */
     @ModelAttribute("visit")
     public Visit loadPetWithVisit(@PathVariable("petId") int petId, Map<String, Object> model) {
-        Pet pet = this.pets.findById(petId);
+        Pet pet = this.petsGateway.findById(petId);
         model.put("pet", pet);
         Visit visit = new Visit();
         pet.addVisit(visit);
@@ -85,8 +85,6 @@ class VisitController {
             return "pets/createOrUpdateVisitForm";
         } else {
         	//saves to HSQL
-            this.visits.save(visit);
-            //saves to SQL
             this.visitsGateway.save(visit);
             visitsGateway.disconnect();
             return "redirect:/owners/{ownerId}";

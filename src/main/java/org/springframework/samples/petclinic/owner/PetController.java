@@ -105,8 +105,6 @@ class PetController {
             owner.addPet(pet);
             //save to HSQL
             this.petsGateway.save(pet);
-            //save to SQL (Shadow write)
-            this.petsGateway.save(pet);
             petsGateway.disconnect();
             return "redirect:/owners/{ownerId}";
         }
