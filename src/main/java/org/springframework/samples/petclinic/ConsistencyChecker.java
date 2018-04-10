@@ -38,7 +38,12 @@ public class ConsistencyChecker {
 	final PetRepository petRepo;
 	final VetRepository vetRepo;
 	final VisitRepository visitRepo;
+	private int inconsistencies;
 
+	public int getInconsistencies() {
+		return inconsistencies;
+	}
+	
 	@Autowired
 	public ConsistencyChecker(OwnerRepository clinicService, PetRepository petRepo, VetRepository vetRepo,
 			VisitRepository visitRepo) {
@@ -78,6 +83,7 @@ public class ConsistencyChecker {
 					specGateway.save(specialty);
 				}
 				vetSpecGateway.save(vet);
+				inconsistencies++;
 			}
 		}
 
@@ -87,6 +93,7 @@ public class ConsistencyChecker {
 			if (pet != petsGateway.findById(petId)) {
 				petTypeGateway.save(pet.getType());
 				petsGateway.save(pet);
+				inconsistencies++;
 				break;
 			}
 		}
@@ -95,6 +102,7 @@ public class ConsistencyChecker {
 			int ownerId = owner.getId();
 			if (owner != ownersGateway.findById(ownerId)) {
 				ownersGateway.save(owner);
+				inconsistencies++;
 				break;
 			}
 		}
@@ -103,6 +111,7 @@ public class ConsistencyChecker {
 			int visitId = visit.getId();
 			if (visit != visitsGateway.findById(visitId)) {
 				visitsGateway.save(visit);
+				inconsistencies++;
 				break;
 			}
 		}
