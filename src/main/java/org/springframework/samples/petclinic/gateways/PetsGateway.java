@@ -57,7 +57,7 @@ public class PetsGateway extends MysqlGateway {
 		        preparedStatement.executeUpdate();
 		        preparedStatement.close();
 			} catch (Exception e) {
-				System.err.println("Owner Update Exception: " + e.getMessage());
+				System.err.println("Pet Delete Exception: " + e.getMessage());
 			}
 		}
 	

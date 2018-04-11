@@ -95,7 +95,7 @@ public class PetTypeGateway extends MysqlGateway {
 	//Delete entry
 	public void delete(PetType type) {
 		try {
-			String query = "Delete types WHERE name = ?, id = ?";
+			String query = "DELETE FROM types WHERE name = ?, id = ?";
 			
 			PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
 			preparedStatement.setString(1, type.getName());
@@ -104,7 +104,7 @@ public class PetTypeGateway extends MysqlGateway {
 		    preparedStatement.close();
 		    
 		} catch (Exception e) {
-			System.err.println("PetType Update Exception: " + e.getMessage());
+			System.err.println("PetType Delete Exception: " + e.getMessage());
 		}
 	}
 }

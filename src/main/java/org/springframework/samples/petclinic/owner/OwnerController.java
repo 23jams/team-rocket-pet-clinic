@@ -17,6 +17,7 @@ package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.samples.petclinic.gateways.OwnersGateway;
+import org.springframework.samples.petclinic.system.ForkliftController;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -41,12 +42,14 @@ import java.util.Map;
  */
 @Controller
 class OwnerController {
+		
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
     
     //Inconsistencies for reads
     int readInconsistencies = 0;
+
     
     //Allows to check for if there was an inconsistency with the read.
     public int getReadInconsistencies() {
@@ -93,7 +96,7 @@ class OwnerController {
         return "owners/findOwners";
     }
 
-    @Async
+    
     @GetMapping("/owners")
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
     	
@@ -105,22 +108,34 @@ class OwnerController {
         // find owners by last name from old data base
         Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
         
+        //Converts the old database to hashcode
+        int old = results.hashCode();
+            
         // find owners by last name from New Database (For shadow reads)
         Collection<Owner> actual = this.ownersGateway.findByLastName(owner.getLastName());
         
-        if (!results.equals(actual)) {
+        //Converts the new database to hashcode
+        int upgrade = actual.hashCode();
+        
+        
+        if (old != upgrade) {
         	
         	//Used to compare two collections
         	Iterator<Owner> actualIt = actual.iterator();
         	
         	//fix inconsistency individually in collections
         	for (Owner people:results) {
-        		
-        		if(!people.equals(actualIt.next())){
+        		Owner check = actualIt.next();
+        		if(!people.equals(check)){
         			
         			//Count inconsistencies
                 	readInconsistencies++;
-        			this.ownersGateway.update(people);
+                	//Deletes faulty entry
+        			this.ownersGateway.delete(check);
+        			//Re-insert correct entry
+        			this.ownersGateway.save(people);
+        			
+        			this.ownersGateway.disconnect();
         		}
         	}
         	
@@ -178,6 +193,11 @@ class OwnerController {
         return mav;
     }
     
-    
+//    @GetMapping("/owner/{id}")
+//    public int returnName(int id) {
+//    	Owner owner = ownersGateway.findById(id);
+//    	ownersGateway.disconnect();
+//    	return owner.getId();
+//    }
 
 }
