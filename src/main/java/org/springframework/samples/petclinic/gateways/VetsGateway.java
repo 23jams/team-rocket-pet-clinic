@@ -53,6 +53,22 @@ public class VetsGateway extends MysqlGateway {
 		}
 	}
 	
+	//Delete
+	public void delete(Vet vet) {
+		try {
+			String query = "DELETE FROM vets WHERE id = ?, first_name = ?, last_name = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setInt(1, vet.getId());
+	        preparedStatement.setString(2, vet.getFirstName());
+	        preparedStatement.setString(3, vet.getLastName());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+			
+		} catch (Exception e) {
+			System.err.println("Vets Delete Exception: " + e.getMessage());
+		}
+	}
+	
 	//Update vet table values based by id
 	public void update(Vet vet) {
 		try {

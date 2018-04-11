@@ -37,10 +37,29 @@ public class OwnersGateway extends MysqlGateway {
 	}
 	
 	//Update owner table values based by id
+	//Note: this was used to update new database if there was inconsistencies. However 
 	public void update(Owner owner) {
 		try {
 			String query = "UPDATE owners SET (first_name = ?, last_name = ?, address = ?, city = ?, telephone = ? "
 					+ " WHERE id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1,  owner.getFirstName());
+	        preparedStatement.setString(2, owner.getLastName());
+	        preparedStatement.setString(3, owner.getAddress());
+	        preparedStatement.setString(4, owner.getCity());
+	        preparedStatement.setString(5, owner.getTelephone());
+	        preparedStatement.setInt(6, owner.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("Owner Update Exception: " + e.getMessage());
+		}
+	}
+	
+	//Delete owner entry from owner table
+	public void delete(Owner owner) {
+		try {
+			String query = "DELETE FROM owners WHERE first_name = ?, last_name = ?, address = ?, city = ?, telephone = ?, id = ?";
 	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
 	        preparedStatement.setString(1,  owner.getFirstName());
 	        preparedStatement.setString(2, owner.getLastName());

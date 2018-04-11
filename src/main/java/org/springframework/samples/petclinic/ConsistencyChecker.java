@@ -38,7 +38,7 @@ public class ConsistencyChecker {
 	final PetRepository petRepo;
 	final VetRepository vetRepo;
 	final VisitRepository visitRepo;
-	private int inconsistencies;
+	private int inconsistencies = 0;
 
 	public int getInconsistencies() {
 		return inconsistencies;

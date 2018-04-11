@@ -52,6 +52,22 @@ public class SpecialtiesGateway extends MysqlGateway {
 		}
 	}
 	
+	//Delete specialty table values
+	
+	public void delete(Specialty specialty) {
+		try {
+			String query = "DELETE FROM specialties WHERE id = ?, name = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setInt(1, specialty.getId());
+	        preparedStatement.setString(2, specialty.getName());
+	        preparedStatement.executeUpdate();
+        	preparedStatement.close();
+	        
+		} catch (Exception e) {
+			System.err.println("Specialty Delete Exception: " + e.getMessage());
+		}
+	}
+	
 	//Update specialty table values based by id
 	public void update(Specialty specialty) {
 		try {	        
