@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.Pet;
 
 import com.mysql.jdbc.PreparedStatement;
@@ -42,6 +43,23 @@ public class PetsGateway extends MysqlGateway {
 			System.err.println("Pet Update Exception: " + e.getMessage());
 		}
 	}
+	
+	//Delete Pet entry from pet table
+		public void delete(Pet pet) {
+			try {
+				String query = "DELETE FROM pets WHERE id = ?, name = ?, birth_date = ?, type_id = ?, owner_id = id";
+		        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+		        preparedStatement.setInt(1, pet.getId());
+		        preparedStatement.setString(2, pet.getName());
+		        preparedStatement.setDate(3, (Date) pet.getBirthDate());
+		        preparedStatement.setInt(4, pet.getType().getId());
+		        preparedStatement.setInt(5, pet.getOwner().getId());
+		        preparedStatement.executeUpdate();
+		        preparedStatement.close();
+			} catch (Exception e) {
+				System.err.println("Owner Update Exception: " + e.getMessage());
+			}
+		}
 	
 	public Pet findById(int id) {
 		Pet pet = new Pet();

@@ -91,4 +91,20 @@ public class PetTypeGateway extends MysqlGateway {
 			System.err.println("PetType Update Exception: " + e.getMessage());
 		}
 	}
+	
+	//Delete entry
+	public void delete(PetType type) {
+		try {
+			String query = "Delete types WHERE name = ?, id = ?";
+			
+			PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+			preparedStatement.setString(1, type.getName());
+			preparedStatement.setInt(2, type.getId());
+			preparedStatement.executeUpdate();
+		    preparedStatement.close();
+		    
+		} catch (Exception e) {
+			System.err.println("PetType Update Exception: " + e.getMessage());
+		}
+	}
 }

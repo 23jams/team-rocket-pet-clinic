@@ -37,6 +37,7 @@ public class OwnersGateway extends MysqlGateway {
 	}
 	
 	//Update owner table values based by id
+	//Note: this was used to update new database if there was inconsistencies. 
 	public void update(Owner owner) {
 		try {
 			String query = "UPDATE owners SET (first_name = ?, last_name = ?, address = ?, city = ?, telephone = ? "
@@ -55,12 +56,31 @@ public class OwnersGateway extends MysqlGateway {
 		}
 	}
 	
+	//Delete owner entry from owner table
+	public void delete(Owner owner) {
+		try {
+			String query = "DELETE FROM owners WHERE first_name = ?, last_name = ?, address = ?, city = ?, telephone = ?, id = ?";
+	        PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+	        preparedStatement.setString(1,  owner.getFirstName());
+	        preparedStatement.setString(2, owner.getLastName());
+	        preparedStatement.setString(3, owner.getAddress());
+	        preparedStatement.setString(4, owner.getCity());
+	        preparedStatement.setString(5, owner.getTelephone());
+	        preparedStatement.setInt(6, owner.getId());
+	        preparedStatement.executeUpdate();
+	        preparedStatement.close();
+		} catch (Exception e) {
+			System.err.println("Owner Update Exception: " + e.getMessage());
+		}
+	}
+	
 	public Collection<Owner> findByLastName(String lastName) {
 		Collection<Owner> collection = new ArrayList<Owner>();
-		String query = "SELECT * FROM owners";
+		String query = "SELECT * FROM owners WHERE last_name = ?";
 		try {
-			Statement statement = (Statement) this.conn.createStatement();
-			ResultSet resultSet = statement.executeQuery(query);
+			PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
+			preparedStatement.setString(1, lastName);
+			ResultSet resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				Owner owner = new Owner();
 				owner.setId(resultSet.getInt("id"));
@@ -82,7 +102,7 @@ public class OwnersGateway extends MysqlGateway {
 		String query = "SELECT * FROM owners WHERE id = ?";
 		try {
 			PreparedStatement preparedStatement = (PreparedStatement) this.conn.prepareStatement(query);
-			preparedStatement.setInt(0, id);
+			preparedStatement.setInt(1, id);
 			ResultSet resultSet = preparedStatement.executeQuery();
 			owner.setId(resultSet.getInt("id"));
 			owner.setFirstName(resultSet.getString("first_name"));
