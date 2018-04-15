@@ -16,6 +16,9 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.OwnersGateway;
+import org.springframework.samples.petclinic.system.ForkliftController;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -28,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -38,11 +42,22 @@ import java.util.Map;
  */
 @Controller
 class OwnerController {
+		
 
     private static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerRepository owners;
+    
+    //Inconsistencies for reads
+    int readInconsistencies = 0;
+
+    
+    //Allows to check for if there was an inconsistency with the read.
+    public int getReadInconsistencies() {
+    	return readInconsistencies;
+    }
 
 
+    OwnersGateway ownersGateway = new OwnersGateway();
     @Autowired
     public OwnerController(OwnerRepository clinicService) {
         this.owners = clinicService;
@@ -60,12 +75,17 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
+  
     @PostMapping("/owners/new")
     public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
+        	//saves to HSQL
             this.owners.save(owner);
+            //saves to SQL (shadow write)
+            this.ownersGateway.save(owner);
+            ownersGateway.disconnect();
             return "redirect:/owners/" + owner.getId();
         }
     }
@@ -76,16 +96,51 @@ class OwnerController {
         return "owners/findOwners";
     }
 
+    
     @GetMapping("/owners")
     public String processFindForm(Owner owner, BindingResult result, Map<String, Object> model) {
-
+    	
         // allow parameterless GET request for /owners to return all records
         if (owner.getLastName() == null) {
             owner.setLastName(""); // empty string signifies broadest possible search
         }
 
-        // find owners by last name
+        // find owners by last name from old data base
         Collection<Owner> results = this.owners.findByLastName(owner.getLastName());
+        
+        //Converts the old database to hashcode
+        int old = results.hashCode();
+            
+        // find owners by last name from New Database (For shadow reads)
+        Collection<Owner> actual = this.ownersGateway.findByLastName(owner.getLastName());
+        
+        //Converts the new database to hashcode
+        int upgrade = actual.hashCode();
+        
+        
+        if (old != upgrade) {
+        	
+        	//Used to compare two collections
+        	Iterator<Owner> actualIt = actual.iterator();
+        	
+        	//fix inconsistency individually in collections
+        	for (Owner people:results) {
+        		Owner check = actualIt.next();
+        		if(!people.equals(check)){
+        			
+        			//Count inconsistencies
+                	readInconsistencies++;
+                	//Deletes faulty entry
+        			this.ownersGateway.delete(check);
+        			//Re-insert correct entry
+        			this.ownersGateway.save(people);
+        			
+        			this.ownersGateway.disconnect();
+        		}
+        	}
+        	
+        }
+        
         if (results.isEmpty()) {
             // no owners found
             result.rejectValue("lastName", "notFound", "not found");
@@ -108,16 +163,22 @@ class OwnerController {
         return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
+    
     @PostMapping("/owners/{ownerId}/edit")
     public String processUpdateOwnerForm(@Valid Owner owner, BindingResult result, @PathVariable("ownerId") int ownerId) {
         if (result.hasErrors()) {
             return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
             owner.setId(ownerId);
+            //saves to HSQL
             this.owners.save(owner);
+            //saves to SQL (shadow write)
+            this.ownersGateway.save(owner);
+            ownersGateway.disconnect();
             return "redirect:/owners/{ownerId}";
         }
     }
+    
 
     /**
      * Custom handler for displaying an owner.
@@ -131,5 +192,12 @@ class OwnerController {
         mav.addObject(this.owners.findById(ownerId));
         return mav;
     }
+    
+//    @GetMapping("/owner/{id}")
+//    public int returnName(int id) {
+//    	Owner owner = ownersGateway.findById(id);
+//    	ownersGateway.disconnect();
+//    	return owner.getId();
+//    }
 
 }

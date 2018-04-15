@@ -38,7 +38,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PropertyComparator;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.samples.petclinic.model.NamedEntity;
-import org.springframework.samples.petclinic.visit.VisitInterface;
+import org.springframework.samples.petclinic.visit.Visit;
 
 /**
  * Simple business object representing a pet.
@@ -49,7 +49,7 @@ import org.springframework.samples.petclinic.visit.VisitInterface;
  */
 @Entity
 @Table(name = "pets")
-public class Pet extends NamedEntity implements PetInterface {
+public class Pet extends NamedEntity {
 
     @Column(name = "birth_date")
     @Temporal(TemporalType.DATE)
@@ -62,68 +62,56 @@ public class Pet extends NamedEntity implements PetInterface {
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
-    private OwnerInterface owner;
+    private Owner owner;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "petId", fetch = FetchType.EAGER)
-    private Set<VisitInterface> visits = new LinkedHashSet<>();
+    private Set<Visit> visits = new LinkedHashSet<>();
 
-    @Override
     public void setBirthDate(Date birthDate) {
         this.birthDate = birthDate;
     }
 
-    @Override
     public Date getBirthDate() {
         return this.birthDate;
     }
 
-    @Override
     public PetType getType() {
         return this.type;
     }
 
-    @Override
     public void setType(PetType type) {
         this.type = type;
     }
 
-
-    @Override
-    
-    public OwnerInterface getOwner() {
+    public Owner getOwner() {
         return this.owner;
     }
 
-    public void setOwner(OwnerInterface owner) {
+    public void setOwner(Owner owner) {
         this.owner = owner;
     }
 
-    @Override
-    public Set<VisitInterface> getVisitsInternal() {
-    	if (this.visits == null) {
+    protected Set<Visit> getVisitsInternal() {
+        if (this.visits == null) {
             this.visits = new HashSet<>();
         }
         return this.visits;
     }
 
-    @Override
-    public List<VisitInterface> getVisits() {
-        List<VisitInterface> sortedVisits = new ArrayList<>(getVisitsInternal());
+    protected void setVisitsInternal(Set<Visit> visits) {
+        this.visits = visits;
+    }
+
+    public List<Visit> getVisits() {
+        List<Visit> sortedVisits = new ArrayList<>(getVisitsInternal());
         PropertyComparator.sort(sortedVisits,
                 new MutableSortDefinition("date", false, false));
         return Collections.unmodifiableList(sortedVisits);
     }
 
-    @Override
-    public void addVisit(VisitInterface visit) {
+    public void addVisit(Visit visit) {
         getVisitsInternal().add(visit);
         visit.setPetId(this.getId());
     }
-
-	@Override
-	public void setVisitsInternal(Set<VisitInterface> visits) {
-		   this.visits = visits;
-		
-	}
 
 }

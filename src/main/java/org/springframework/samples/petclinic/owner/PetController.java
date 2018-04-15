@@ -16,6 +16,7 @@
 package org.springframework.samples.petclinic.owner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.gateways.PetsGateway;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
@@ -38,6 +39,7 @@ class PetController {
     private static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private final PetRepository pets;
     private final OwnerRepository owners;
+    PetsGateway petsGateway = new PetsGateway();
 
     @Autowired
     public PetController(PetRepository pets, OwnerRepository owners) {
@@ -83,7 +85,10 @@ class PetController {
             model.put("pet", pet);
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
         } else {
+        	//saves to HSQL
             this.pets.save(pet);
+            //saves to SQL (shadow write)
+            this.petsGateway.save(pet);
             return "redirect:/owners/{ownerId}";
         }
     }
@@ -103,9 +108,12 @@ class PetController {
             return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
         } else {
             owner.addPet(pet);
+            //save to HSQL
             this.pets.save(pet);
+            //save to SQL (Shadow write)
+            this.petsGateway.save(pet);
+            petsGateway.disconnect();
             return "redirect:/owners/{ownerId}";
         }
     }
-
 }

@@ -34,12 +34,12 @@ docker run -e MYSQL_ROOT_PASSWORD=petclinic -e MYSQL_DATABASE=petclinic -p 3306:
 
 ### prerequisites
 The following items should be installed in your system:
-* Maven 3 (http://www.sonatype.com/books/mvnref-book/reference/installation.html)
+* Apache Maven (https://maven.apache.org/install.html)
 * git command line tool (https://help.github.com/articles/set-up-git)
 * Eclipse with the m2e plugin (m2e is installed by default when using the STS (http://www.springsource.org/sts) distribution of Eclipse)
 
 Note: when m2e is available, there is an m2 icon in Help -> About dialog.
-If m2e is not there, just follow the install process here: http://eclipse.org/m2e/download/
+If m2e is not there, just follow the install process here: http://www.eclipse.org/m2e/m2e-downloads.html
 
 
 ### Steps:
@@ -117,3 +117,4 @@ The Spring PetClinic sample application is released under version 2.0 of the [Ap
 [spring-petclinic-reactjs]: https://github.com/spring-petclinic/spring-petclinic-reactjs
 [spring-petclinic-graphql]: https://github.com/spring-petclinic/spring-petclinic-graphql
 [spring-petclinic-kotlin]: https://github.com/spring-petclinic/spring-petclinic-kotlin
+[spring-petclinic-rest]: https://github.com/spring-petclinic/spring-petclinic-rest

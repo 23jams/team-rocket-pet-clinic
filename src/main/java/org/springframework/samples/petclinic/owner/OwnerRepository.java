@@ -16,7 +16,9 @@
 package org.springframework.samples.petclinic.owner;
 
 import java.util.Collection;
+import java.util.List;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
@@ -58,6 +60,14 @@ public interface OwnerRepository extends Repository<Owner, Integer> {
      * @param owner the {@link Owner} to save
      */
     void save(Owner owner);
+    
+    /**
+     * Retrieve all owners from the data store
+     * @return all owners
+     */
+    @Transactional(readOnly = true)
+    Collection<Owner> findAll() throws DataAccessException;
+    
 
 
 }

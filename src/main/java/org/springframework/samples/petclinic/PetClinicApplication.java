@@ -16,8 +16,14 @@
 
 package org.springframework.samples.petclinic;
 
+import java.util.concurrent.Executor;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * PetClinic Spring Boot Application.
@@ -25,11 +31,24 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Dave Syer
  *
  */
+@EnableAsync
+@EnableScheduling
 @SpringBootApplication
 public class PetClinicApplication {
 
     public static void main(String[] args) throws Exception {
         SpringApplication.run(PetClinicApplication.class, args);
+    }
+    
+    @Bean(name = "threadPoolExecutor")
+    public Executor getAsyncExecutor() {
+    	ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+    	executor.setCorePoolSize(7);
+    	executor.setMaxPoolSize(42);
+    	executor.setQueueCapacity(11);
+    	executor.setThreadNamePrefix("threadPoolExecutor-");
+    	executor.initialize();
+    	return executor;
     }
 
 }
